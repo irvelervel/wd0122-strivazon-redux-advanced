@@ -9,6 +9,7 @@ const mapStateToProps = (state) => {
   // of the function, is STILL going to be the whole cake!
   return {
     cart: state.cart.content,
+    availableBooks: state.book.stock,
   }
 }
 
@@ -20,7 +21,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const Cart = ({ cart, removeFromCart }) => (
+const Cart = ({ cart, removeFromCart, availableBooks }) => (
   <Row>
     <Col sm={12}>
       <ul style={{ listStyle: 'none' }}>
@@ -52,6 +53,11 @@ const Cart = ({ cart, removeFromCart }) => (
           0
         )}
       </Col>
+      <Row>
+        <Col sm={12} className="font-weight-bold">
+          We currently have {availableBooks.length} books in stock.
+        </Col>
+      </Row>
     </Row>
   </Row>
 )

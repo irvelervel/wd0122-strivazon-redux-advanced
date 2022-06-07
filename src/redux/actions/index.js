@@ -5,6 +5,9 @@
 export const ADD_TO_CART = 'ADD_TO_CART'
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART'
 export const SET_USERNAME = 'SET_USERNAME'
+export const GET_BOOKS = 'GET_BOOKS'
+export const GET_BOOKS_ERROR = 'GET_BOOKS_ERROR'
+export const GET_BOOKS_LOADING = 'GET_BOOKS_LOADING'
 
 export const addToCartAction = (bookToAdd) => {
   return {
@@ -42,7 +45,7 @@ export const setUsernameAction = (newName) => {
 // we're going to write async functions here
 
 export const addToCartActionWithThunk = (bookToAdd) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     // you're going to fetch data here, grab the result
     // and dispatch the data in order to reach the reducer
     // you're going to perform the async stuff here, one step before the reducer
@@ -57,5 +60,50 @@ export const addToCartActionWithThunk = (bookToAdd) => {
       payload: bookToAdd, // this is not a mandatory property for every action
       // but our reducer needs this book in order to fill the cart correctly!
     })
+  }
+}
+
+export const getBooksAction = () => {
+  return async (dispatch) => {
+    // the redux thunk action creators get from redux 'dispatch' as
+    // the first argument of the function!
+
+    // so we can perform our logic here...
+    // ...and after it dispatch the right action with the data we grabbed!
+
+    try {
+      let resp = await fetch(
+        'https://striveschool-api.herokuapp.com/food-books'
+      )
+      if (resp.ok) {
+        let books = await resp.json()
+        // this.setState({ books }); // <-- ofc this doesn't work here
+        // I want to set the global redux store!
+        // so I'll need to dispatch an action!
+        dispatch({
+          type: GET_BOOKS,
+          payload: books,
+        })
+        dispatch({
+          type: GET_BOOKS_LOADING,
+        })
+      } else {
+        console.log('error')
+        dispatch({
+          type: GET_BOOKS_ERROR,
+        })
+        dispatch({
+          type: GET_BOOKS_LOADING,
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      dispatch({
+        type: GET_BOOKS_ERROR,
+      })
+      dispatch({
+        type: GET_BOOKS_LOADING,
+      })
+    }
   }
 }
