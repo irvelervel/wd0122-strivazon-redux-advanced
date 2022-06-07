@@ -1,8 +1,16 @@
-import { configureStore } from '@reduxjs/toolkit'
-import mainReducer from '../reducers'
+import { configureStore, combineReducers } from '@reduxjs/toolkit'
+import userReducer from '../reducers/userReducer'
+import cartReducer from '../reducers/cartReducer'
+
+// now that we divided our single reducer into multiple ones, it's time
+// to join them back into a single redux store! we can use combineReducers
+// to recreate the structure and assign each store 'slice' to its corresponding reducer
 
 const store = configureStore({
-  reducer: mainReducer,
+  reducer: combineReducers({
+    cart: cartReducer,
+    user: userReducer,
+  }),
   // we're going to tell Redux which reducer function to use!
 })
 

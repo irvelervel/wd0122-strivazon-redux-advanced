@@ -2,10 +2,13 @@ import { Component } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
 import { connect } from 'react-redux'
-import { addToCartAction } from '../redux/actions'
+import { addToCartAction, addToCartActionWithThunk } from '../redux/actions'
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+    username: state.user.firstName,
+    // username is now a prop for BookDetail! this.props.username
+  }
 }
 
 // mapDispatchToProps is a function returning an object!
@@ -16,7 +19,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     addToCart: (bookToAdd) => {
-      dispatch(addToCartAction(bookToAdd))
+      dispatch(addToCartActionWithThunk(bookToAdd))
     },
   }
 }
@@ -63,14 +66,21 @@ class BookDetail extends Component {
                   <span className="font-weight-bold">Price:</span>
                   {this.state.book.price}
                 </p>
-                <Button
-                  color="primary"
-                  onClick={() => {
-                    this.props.addToCart(this.state.book)
-                  }}
-                >
-                  ADD TO CART
-                </Button>
+                {/* I WANT TO HIDE THIS BUTTON IF THE USER IS NOT LOGGED IN */}
+                {/* I WANT TO HIDE THIS BUTTON WHEN state.user.firstName === '' */}
+                {this.props.username ? (
+                  // the user is already logged in!
+                  <Button
+                    color="primary"
+                    onClick={() => {
+                      this.props.addToCart(this.state.book)
+                    }}
+                  >
+                    ADD TO CART
+                  </Button>
+                ) : (
+                  <div>Log in for adding books to your cart!</div>
+                )}
               </Col>
             </Row>
           </>
